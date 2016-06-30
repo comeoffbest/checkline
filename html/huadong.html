@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+<link href="css/sucaijiayuan.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+
+</body>
+
+<script src='<%=ResolveUrl("~/Js/swipe.min.js") %>' ></script> 
+    <script type="text/javascript">
+        var strDomain = "127.0.0.1";
+        var oStorage;
+        try {
+            oStorage = window.localStorage ? window.localStorage : window.globalStorage[strDomain];
+        } catch (err) {
+            alert(err.message ? err.message : err.toString());
+        }
+        function Load() {
+            var index = (isNaN(oStorage.getItem("SwipeIndex"))) ? 0 : Number(oStorage.getItem("SwipeIndex"));
+            var elem = document.getElementById('nav');
+            window.mySwipe = new Swipe(elem, {
+                startSlide: index,
+                 auto: 0,
+                 continuous: true,
+                 disableScroll: true,
+                 stopPropagation: true,
+                 callback: function(index, element) {},
+                 transitionEnd: function(index, element) {}
+            });
+        }
+        function Save() {
+            var i = mySwipe.getPos();
+            oStorage.setItem("SwipeIndex", i);
+        }
+    </script>
+
+</html>

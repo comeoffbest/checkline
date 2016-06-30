@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>巡检记录</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+        .empty{ text-align: center; padding: 120px 0; }
+    </style>
+</head>
+<body>
+    <div class="empty">巡检记录 </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>	
+<script type="text/javascript">	
+	var map = api.require('bMap');
+map.open({
+    rect: {
+        x: 100,
+        y: 100,
+        w: 320,
+        h: 300
+    },
+    center: {
+        lon: 116.4021310000,
+        lat: 39.9994480000
+    },
+    zoomLevel: 10,
+    showUserLocation: true,
+    fixedOn: '',
+    fixed: true
+}, function(ret){
+    if(ret.status){
+        alert('地图打开功');
+    }
+});	
+</script>	
+
+
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <style>
+        body, html {
+            height: 100%;
+        }
+
+        body {
+            background-image: url(../image/bg.jpg);
+            background-repeat: no-repeat;
+            background-size: 100%;
+        }
+
+        header {
+            display: -webkit-box;
+        }
+
+        .title {
+            -webkit-box-flex: 1;
+            text-align: center;
+            line-height: 50px;
+            font-size: 20px;
+        }
+
+        .btn {
+            width: 50px;
+            height: 50px;
+        }
+
+        .cancel {
+            background-image: url("../image/ad_close_gray@2x.png");
+            background-size: 40px;
+            background-repeat: no-repeat no-repeat;
+            background-position: center;
+        }
+
+        i {
+            display: block;
+            width: 30px;
+            height: 30px;
+            background-size: 30px;
+            background-repeat: no-repeat no-repeat;
+            background-position: center;
+        }
+
+        .user {
+            background-image: url("../image/login_account@2x.png");
+        }
+
+        .password {
+            background-image: url("../image/logn_password@2x.png");
+        }
+
+        .input-wrap {
+            padding: 10px 0;
+            display: -webkit-box;
+        }
+
+        .input-wrap:first-child {
+            border-bottom: 1px solid #d4d4d4;
+        }
+
+        .form {
+            background-color: rgba(255, 255, 255, 0.8);
+            margin: 40px 20px 0 20px;
+            border-radius: 8px;
+            padding: 0 10px;
+            line-height: 30px;
+        }
+
+        .input-wrap input {
+            display: block;
+            -webkit-box-flex: 1;
+            background-color: rgba(255, 255, 255, 0);
+            outline: none;
+            height: 30px;
+        }
+
+        .find-pwd {
+            text-align: right;
+            margin: 40px;
+        }
+
+        .button.green {
+            background-color: #FF7800;  /* 36b05e */
+        }
+        .button.green.active, .button.green:active{
+            color: #fff;
+            background-color: #ff9900;
+            border: 1px solid #ff9900;        
+        }
+        .button {
+            display: block;
+            color: white;
+            margin: 0 40px;
+            text-align: center;
+            border-radius: 8px;
+            height: 40px;
+            line-height: 40px;
+        }
+
+        .button.yellow {
+            background-color: #FF7800;
+        }
+
+        .margin-top-25 {
+            margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+    <br />
+<header>
+    <div class="btn cancel" tapmode="" onclick="closeWin();"></div>
+    <div class="title">登陆</div>
+    <div class="btn"></div>
+</header>
+<div class="content">
+    <div class="form">
+        <div class="input-wrap">
+            <i class="user"></i>
+            <input type="text" placeholder="用户名" class="txt" id="username" value=""/>
+        </div>
+        <div class="input-wrap">
+            <i class="password"></i>
+            <input type="password" placeholder="密码" class="txt" id="password" value=""/>
+        </div>
+    </div>
+<!--    <p class="find-pwd"><span> </span></p> -->
+<br /> <br /> 
+    <div class="button green" id="login" tapmode="" onclick="login()">登录</div>
+    <br />
+    <!--<div class="button yellow margin-top-25" tapmode="" onclick="register()">注册新用户</div>-->
+<div class="button green" id="login" tapmode="" onclick="closeWin()">测试 2</div>
+
+</div>
+<script type="text/javascript" src="../script/api.js" ></script>
+<script src="../script/zepto.min.js"></script>
+<script>
+    var uname,pwd,value1;
+    var key = 'user';
+    var userArr = {};
+    var yxdArr = {};
+    var user1 = {};
+    var userid = {};
+    apiready = function () {
+        fixIos7Bar($("header"));
+api.addEventListener({
+    name:'keyback'
+}, function(ret, err){        
+    if( ret ){
+//      alert( JSON.stringify( ret ) );
+//      alert("弹出");
+        api.closeWidget();
+    }else{
+        alert( JSON.stringify( err ) );
+    }
+});           
+
+    };
+
+    
+    function closeWin() {
+//      api.closeWin({
+//
+//      })
+                api.closeWin({
+                    name:'root'
+                });          
+        
+    }
+    function login(){
+//      var uname = $("#username").val();
+//      var pwd = $("#password").val();   
+        var uname = $api.byId('username').value;
+        var pwd = $api.byId('password').value;
+        var model = api.require('model');
+
+        
+        
+        model.config({
+            appKey: '038C92DC-913D-7143-0739-7F4F95613056',
+            host: ''
+        });
+        var user = api.require("user");
+        user.login({
+            username: $("#username").val(),
+            password: $("#password").val(),        
+            }, function(ret, err) {
+            if (ret.ttl==1209600) {
+                chaxun_user(ret.userId);
+//              api.alert({
+//                  msg:"登陆成功"
+//              });
+//              api.openWin({
+//                  name:"pointup",
+//                  url:'./pointup_win.html',
+//                  hScollBarEnabled : false,
+//                  bounces: false,
+//              }) 
+                api.closeWin({
+                    name:'user_login'
+                });  
+//              api.closeWin();                               
+            }
+            else{
+                api.alert({
+                    msg:"用户名或密码错误，请重新输入！"
+                });            
+            
+            }
+        });   
+    }
+    function register(){
+//      var model = api.require('model');
+//      model.config({
+//          appKey: '038C92DC-913D-7143-0739-7F4F95613056',
+//          host: ''
+//      }); 
+//      var user = api.require('user');
+//      user.register({
+//          username: 'uname',
+//          password: '111111'
+//      }, function(ret, err) {
+//          if (ret) {
+//              //do something        
+//          }
+//          alert(JSON.stringify(ret)+"err:"+JSON.stringify(err));
+//      });
+//      api.openWin({
+//          name:"win_register",
+//          url:'win_register.html'
+//      })
+    }
+    function test1(){
+        userArr.name = 'kenny';
+        userArr.job = 'kenny@163.com';
+        $api.setStorage(key, user);
+    
+    }
+    
+    function test2(){
+        var appId = api.appId;
+        var appName = api.appName;
+        var appVersion = api.appVersion; 
+        var systemType = api.systemType; 
+        var systemVersion = api.systemVersion;
+        var version = api.version;
+        var deviceId = api.deviceId;
+        var deviceModel = api.deviceModel;
+        var deviceName = api.deviceName;
+        var operator = api.operator;  
+        var connectionType = api.connectionType; 
+        var fullScreen = api.fullScreen; 
+        var screenWidth = api.screenWidth;
+        var screenHeight = api.screenHeight; 
+        var winName = api.winName;
+        var winWidth = api.winWidth;
+        var winHeight = api.winHeight;
+        var frameName = api.frameName;
+        var frameWidth = api.frameWidth; 
+        var frameHeight = api.frameHeight;
+        
+        var pageParam = api.pageParam; //比如： {"name" : "tans-con"} 页间传递参数
+        var wgtParam = api.wgtParam;
+        var wgtRootDir = api.wgtRootDir;
+        var fsDir = api.fsDir;
+        var cacheDir = api.cacheDir; 
+        var appParam = api.appParam;
+               
+        alert("应用的 IDappId:"+appId + "\n"
+              +"应用在桌面显示名称appName:"+appName + "\n"
+              +"应用版本号appVersion:"+appVersion + "\n"
+              +"系统类型systemType:"+systemType + "\n"
+              +"手机平台的系统版本systemVersion:"+systemVersion + "\n"
+              +"引擎版本信息version:"+version + "\n"
+              +"设备唯一标识deviceId:"+deviceId + "\n"
+              +"设备型号deviceModel:"+deviceModel + "\n"
+              +"设备名称deviceName:"+deviceName + "\n"
+              +"运营商名称operator:"+operator + "\n"
+              +"当前网络连接类型connectionType:"+connectionType + "\n"
+              +"应用是否全屏fullScreen:"+fullScreen + "\n"
+              +"屏幕分辨率宽screenWidth:"+screenWidth + "\n"
+              +"屏幕分辨率高screenHeight:"+screenHeight + "\n"
+              +"当前 window 名称winName:"+winName + "\n"
+              +"当前 window 宽度winWidth:"+winWidth + "\n"
+              +"当前 window 高度winHeight:"+winHeight + "\n"
+              +"frame 名称frameName:"+frameName + "\n"
+              +"frame 宽度frameWidth:"+frameWidth + "\n"
+              +"frame 宽度frame 名称frameName:"+frameName + "\n"
+              +"frame 高度frameHeight:"+frameHeight + "\n"
+              +"页面参数pageParam:"+pageParam + "\n"
+              +"widget: //协议对应的真实目录，即 widget 网页包的根目录wgtRootDir:"+wgtRootDir + "\n"
+              +"widget 参数，JSON 对象类型wgtParam:"+wgtParam + "\n"
+              +"当应用被第三方应用打开时，传递过来的参数appParam:"+appParam + "\n"
+              +"fs: //协议对应地真实目录，字符串类型fsDir:"+fsDir + "\n"
+              +"cache://协议对应的真实目录cacheDir:"+cacheDir + "\n"
+        );
+      
+    }  
+    
+//查询用户开始
+    function chaxun_user(userid){
+//      var query = api.require("query");
+//      query.createQuery(function(ret, err) {
+//      if (ret && ret.qid) {
+//          var queryId = ret.qid;
+//          query.justFields({
+//              qid:queryId,
+//              value:["username","password","job","department"]
+//          });
+//      query.whereEqual({
+//          qid: ret.qid,
+//          column: 'id',
+//          value: userid
+//      });        
+        var model = api.require("model");
+        model.findById({
+            class: "user",
+            id: userid //queryId
+        }, function(ret, err){
+            if(ret){
+//                alert(ret);
+                $api.setStorage("user", ret);
+            }
+        });
+    }
+//查询用户结束    
+</script>
+</body>
+</html>

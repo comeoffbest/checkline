@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <title>动态创建表格(处理IE6兼容问题)</title>
+ <script type="text/javascript">
+ function AppendTableData() {
+  var table = document.getElementById("tblMain");
+  var data = { "百度": "http://www.baidu.com",
+  "脚本之家": "http://www.jb51.net",
+  "搜狐": "http://www.sohu.com"
+  };
+  for (var key in data) {
+  var tr = document.createElement("tr");
+  var td1 = document.createElement("td");
+  td1.innerText = key;
+  tr.appendChild(td1);
+  var td2 = document.createElement("td");
+  td2.innerHTML = "<a href='" + data[key] + "'>" + data[key] + "</a>";
+  tr.appendChild(td2);
+
+  //table.appendChild(tr); 把这一句替换掉
+  table.tBodies[0].appendChild(tr);
+  }
+ }
+ 
+ function Appendlist(){
+ 
+                var doc = document,
+                    li = doc.createElement("li"),
+                    a = doc.createElement("a"),
+                    img = doc.createElement("img"),
+                    div = doc.createElement("div"),
+                    p = doc.createElement("p");
+                li.setAttribute("class", "mui-table-view-cell mui-media"); 
+ 
+ 
+ 
+ }
+ 
+ 
+ </script>
+</head>
+<body>
+ <!--由于动态添加的数据在debugbar中看生成的HTML代码发现，
+ 会自动添加一个<tbody>
+ 并且内容是空的，把我们动态生成的数据给冲掉了，
+ 所以我们手工添加一个<tbody>
+ tr添加到这个<tbody>下面
+ -->
+ <table id="tblMain"><tbody></tbody></table>
+ <input type="button" value="动态添加网格数据"
+ onclick="AppendTableData()" />
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>APP</title>
+    <script type="text/javascript" src="../js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css">
+    <script type="text/javascript">
+</script>
+</head>
+<style type="text/css">
+.aui-content {
+    background: #ffffff;
+    overflow: hidden;
+    padding: 15px;
+}
+p {
+    margin: 10px 0;
+    overflow: hidden;
+}
+/*        .input-wrap input {
+            display: block;
+            -webkit-box-flex: 1;
+            background-color: rgba(255, 255, 255, 0);
+            outline: none;
+            height: 30px;
+        }*/
+
+        i {
+            display: block;
+            width: 30px;
+            height: 30px;
+            background-size: 30px;
+            background-repeat: no-repeat no-repeat;
+            background-position: center;
+        }        
+ 
+        .button.green {
+            background-color: #FF7800;  /* 36b05e */
+        }
+        .button.green.active, .button.green:active{
+            color: #fff;
+            background-color: #ff9900;
+            border: 1px solid #ff9900;        
+        }
+        .button {
+            display: block;
+            color: white;
+            margin: 0 40px;
+            text-align: center;
+            border-radius: 8px;
+            height: 40px;
+            line-height: 40px;
+        }
+
+        .button.yellow {
+            background-color: #FF7800;
+        }
+        
+		 	.mui-content-padded {
+				padding: 10px;
+			}
+		 	.mui-input {
+				background-color:#fff;
+			}			
+			/*body,body .mui-content {
+				background-color: #fff !important;
+			}*/
+			code {
+				word-wrap: break-word;
+				word-break: normal;
+				font-size: 90%;
+				color: #c7254e;
+				background-color: #f9f2f4;
+				border-radius: 4px;
+			}       
+     #list ul, li{list-style:none outside none;margin:0;padding:0}
+    #list{border:0px solid gold; height:34px; display:flex; /*flex-direction:row;*/ text-align:center; justify-content:center;}
+    #list li{/*font-family:"microsoft yahei"; font-size:50px;background:#fff;*/  color:#fff; margin:2px; flex-grow:1;}
+     
+     .divcss5-left{float:left;width:auto;height:auto;border:0px solid #F00} 
+     .divcss5-cent{margin:0 auto;width:auto;height:auto;border:0px solid #F00} 
+     
+    #list .box{margin:50px auto;width:500px;height:auto;border:0px solid #000;}
+    #list .box li{width:25%;display:block;height:50px;text-align:center;}
+    #list .lens{margin:0 auto;}         
+</style>
+<body>
+
+<br />   
+
+		<div class="mui-content">
+			<div class="mui-content-padded" >
+				<!--<div class="mui-input-group">-->
+                    <div class="mui-input-row">
+                        <label style="width:25%;">坐标：</label>
+                        <input id="lon"  onclick="getLocation();" class="mui-input aui-iconfont " align="right" value="&nbsp&nbsp&#xe6a4;" id="lonlat" type="text"  style="background:#f90;width:10%;
+                        color: white;text-align: center;border-radius: 8px;height: 40px; "  readonly="readonly"> 
+                        <input id="lonlat" type="text" class="mui-input" style="background:#fff;width:65%;"  readonly="readonly">
+                    </div> 
+                    <br />
+                    <div class="mui-input-row">
+                        <label style="width:25%;">名称：</label>
+                        <input id='PointName' type="text" class="mui-input-clear mui-input" style="background:#fff;width:75%;" placeholder="例如：GX063+100m">
+                    </div>  
+                    <br />
+                    <div class="mui-input-row">
+                        <label style="width:25%;">频次：</label>
+                        <input id="FM" type="text" class="mui-input" style="background:#fff;width:75%;" readonly="readonly">
+                    </div>                      
+                    <br />
+                    <div class="mui-input-row">
+                        <label style="width:25%;">类型：</label>
+                        <select id="PointType" style="width:75%;">
+                            <option value="普通">普通</option>
+                            <option value="高后果">高后果</option>
+                            <option value="第三方施工">第三方施工</option>
+                            <option value="临时监护">临时监护</option>
+                        </select>
+                    </div>
+                    <br />
+                    <div class="mui-input-row" >
+                        <label style="width:25%;">描述：</label>
+                        <textarea id="memo" rows="3" style="width:75%;" placeholder=""描述></textarea>
+                    </div>
+
+			</div>
+		</div>
+		
+      <ul id="list">
+        <li class = "box li lens"><button class="aui-btn aui-btn-success1"  style="width:70%;" onclick="RW_DB();">保存</button></li>
+        <li class = "box li lens"><button class="aui-btn aui-btn-success1" style="width:70%;" onclick="gettext();">保存并上报</button></li>
+      </ul> 		
+</body>
+<script type="text/javascript" src="../script/api.js" ></script>
+<script src="../js/mui.min.js"></script>
+<script type="text/javascript">
+    var  userArr={};
+    var winHeight,
+        map,
+        lat='39.989539',     
+        lon='116.384767';
+    apiready = function(){
+        userArr = $api.getStorage("user");
+        winHeight = api.pageParam.height;
+        api.parseTapmode();
+        map = api.require('bMap');
+        getLocation();
+
+//        open();
+
+    }; 
+    //getL
+    function fresh(){
+        getLocation();
+                document.getElementById("spX").value = spX;
+                document.getElementById("spY").value = spY;  
+                document.getElementById("lonlat").value = 1023;
+                
+    }
+     
+    //获取坐标
+    function getLocation(){
+        map.getLocation({
+            accuracy: '10m',
+            autoStop: true,
+            filter: 1
+        }, function(ret, err){
+            if(ret.status){
+                lat = ret.lat;
+                lon = ret.lon;
+                document.getElementById("lonlat").value = ret.lon + "," + ret.lat;
+//                alert(JSON.stringify(ret));
+            }else{
+                alert(err.code);
+            }
+        });
+    }  
+ //添加标记  
+  function add_flag0(){  
+//var localmarker=new map.Marker(new map.Point(lon,lat));    
+//  map.addOverlay(localmarker);   
+  }        
+    document.getElementById('FM').value = 1;
+			
+var select = document.getElementById('PointType');
+
+	select.onchange = function(){
+   				if(document.getElementById("PointType").value=="高后果"){
+   					document.getElementById('FM').value = 2;	
+   				}
+   				else{
+   					document.getElementById('FM').value = 1;
+   				}
+	}	
+	
+	
+//写外部数据库开始20160303
+    function RW_OUT_DB(data1){
+        api.showProgress();//显示加载进度框
+        api.ajax({
+            url:'http://192.168.2.222/map/post_collect.php',//如果地址访问不到会请求出错，请填写自己的接口地址
+            method:'post',
+            cache:'false',
+            timeout:30,
+            dataTpye:'json',
+            contentType:"application/json; charset=utf-8",
+            data:{ values:data1}
+            },function(ret,err){
+            api.hideProgress();//隐藏加载进度框
+            if(ret){
+//                alert(JSON.stringify(ret));
+//              api.closeWin({
+//              });
+                }else{
+//                api.alert({msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)});
+                }
+            });
+    }
+
+//写外部数据库结束    
+
+//写内部数据库开始    
+    function RW_IN_DB(data1){
+//      api.showProgress({
+//          style: 'default',
+//          animationType: 'fade',
+//          title: '数据写入中...',
+//          text: '请稍候...',
+//          modal: false
+//      });    
+//        XYZ = Math.sqrt(spX*spX+spY*spY+spZ*spZ);
+        var model = api.require("model");
+//        data1 = {"timestamp":1457673090705,"lon":116.31538,"status":true,"lat":39.988232,"locationType":"OffLine"};
+        model.insert({
+            class: "patrol_point",
+            value: data1
+            }, function(ret, err){
+                alert("ret: 写数据库：" + JSON.stringify(ret) + "speeds: " + speeds + "\nerr: " + JSON.stringify(err));
+        });  
+//      api.hideProgress();
+    }
+//写内部数据库结束    			
+    //写入数据库开始
+    function RW_DB(){
+        var data1={};
+        data1["lon"] = lon;
+        data1["lat"] = lat;
+        data1["patrol_point_name"] = document.getElementById('PointName').value;
+        data1["patrol_fm"] = document.getElementById('FM').value;
+        data1["point_type"] = document.getElementById('PointType').value;
+        data1["memo"] = document.getElementById('memo').value + document.getElementById('lonlat').value;
+        data1["username"] = userArr.username;
+//      if(document.getElementById('lonlat').value == ""){
+//              alert("坐标不正确，请点右侧按钮刷新坐标！");
+//              return;
+//      }
+        if(document.getElementById('PointName').value != ""){
+            if(userArr.username!="admin"){
+                RW_OUT_DB(data1);
+            }
+              RW_IN_DB(data1);  //写入APICLOU数据库
+                alert("值："+JSON.stringify(data1));
+            }else{
+                alert("请输入名称！");
+            }
+
+    }
+
+//写入数据库结束			
+	function gettext(){
+	    alert("打开！");
+	    var scanner = api.require('scanner');
+
+        scanner.decode({
+        },function(ret,err){
+        	//coding...
+        	alert(JSON.stringify(ret));
+        });        
+
+	
+	}		
+</script>
+</html>

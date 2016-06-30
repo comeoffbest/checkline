@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-flex.css" />
+    <style type="text/css">
+    body {
+        background: #ffffff;
+    }
+    .box [class*=aui-flex-]:not(.aui-flex-col) {
+        background-color: rgba(26, 188, 156, 0.5);
+        color: #ffffff;
+        font-size: 12px;
+    }
+    .box.nobg [class*=aui-flex-]:not(.aui-flex-col){
+        background: #ffffff;
+    }
+    .box.bottom {
+        margin-bottom: 15px;
+    }
+    img {
+        width: 100%;
+    }
+    .aui-border-t:after,
+    .aui-border-b:after,
+    .aui-border-l:after,
+    .aui-border-r:after,
+    .aui-border-tb:after,
+    .aui-border:after {
+        border-color: #e0e0e0;
+    }
+    .demo-box {
+        height: 300px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .demo-box::-webkit-scrollbar {
+        width: 0px;
+        height: 0px;
+        visibility: hidden;
+    }
+    .img-list {
+        padding: 2px 2px 0 2px;
+    }
+    .img-list > div {
+        padding: 2px 2px 0 2px;
+    }
+    .img-list img {
+        display: block;
+    }
+    .aui-content > div {
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    </style>
+</head>
+<body>
+
+    <p class="aui-padded-10 aui-text-center">其他案例样式（一）图片排列</p>
+    <div class="aui-line-x"></div>
+    <div class="aui-content">
+        <div class="aui-flex-col img-list">
+            <div class="aui-flex-item-4">
+                <img src="../image/demo1.png">
+            </div>
+            <div class="aui-flex-item-4">
+                <img src="../image/demo2.png">
+            </div>
+            <div class="aui-flex-item-4">
+                <img src="../image/demo3.png">
+            </div>
+        </div>
+        <div class="aui-flex-col img-list">
+            <div class="aui-flex-item-4">
+                <img src="../image/demo4.png">
+            </div>
+            <div class="aui-flex-item-4">
+                <img src="../image/demo5.png">
+            </div>
+            <div class="aui-flex-item-4">
+                <img src="../image/demo6.png">
+            </div>
+        </div>
+    </div>
+    <div class="aui-content aui-padded-15">
+        <div class="aui-border-t">上边框</div>
+        <div class="aui-border-b">下边框</div>
+        <div class="aui-border-l">左边框</div>
+        <div class="aui-border-r">右边框</div>
+        <div class="aui-border-tb">上下边框</div>
+        <div class="aui-border">边框</div>
+        <div class="aui-border aui-border-radius">圆角边框</div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js" ></script>
+<script type="text/javascript">
+    apiready = function(){
+        api.parseTapmode();
+    }
+
+</script>
+</html>

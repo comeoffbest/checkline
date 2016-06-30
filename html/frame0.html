@@ -1,0 +1,1065 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>APP</title>
+    
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+     
+</head>
+<style type="text/css">
+body {
+    background-color: #ffffff;
+}
+.empty{ text-align: center; padding: 120px 0; }
+</style>
+<body>
+   <div class="empty">巡检</div>  
+</body>
+<script type="text/javascript" src="../script/api.js" ></script>
+<script type="text/javascript">
+    var now = new Date();
+	var winHeight,spX,spY,spZ,XYZ,speeds=0,interval=10,
+        Pid=100,Plon=116.315348,Plat=39.985065,Pradius=5,
+        PborderColor="#FF0000",PborderWidth=3,PfillColor="#0000ff",
+        map,
+        latNow,lonNow,timestampNow,
+        yxdArr,
+	    distances=0,miao = 1,
+	    timestamp=1459310191974,
+		lat='39.989539',
+		lon='116.384767';
+    var  userArr={},mobile;
+    apiready = function(){
+        userArr = $api.getStorage("user");
+        mobile = userArr.mobile;
+        username = userArr.username;
+    	winHeight = api.pageParam.height;
+        api.parseTapmode();
+        map = api.require('bMap');
+        getLocation(); 
+        open();
+        setScaleBar();
+        showUserLocation("none",4000) ;
+        setCompass();
+
+//        getspeedStart();    
+    };
+    //打开地图
+    function open(){
+		map.open({
+		    rect: {
+		        x: 0,
+		        y: 70,
+		        w: 'auto',
+		        h: api.frameHeight-5
+		    },
+		    center: {
+		        lon: lon,
+		        lat: lat
+		    },
+		    zoomLevel: 15,
+		    showUserLocation: true,
+		    fixedOn: '',
+		    fixed: true
+		}, function(ret){
+		    
+		});
+    }
+    //关闭
+    function close(){
+    	map.close();
+    }
+    //显示
+    function show(){
+    	map.show();
+    }
+    //隐藏
+    function hide(){
+    	map.hide();
+    }
+    //初始化
+    function restart(){
+    	api.toast({
+		    msg: '请稍候',
+		    duration:1500,
+		    location: 'top'
+		});
+		setTimeout(function(){
+			close();
+			open();
+		},1000)
+		
+    }
+    //获取坐标
+    function getLocation(){
+    	map.getLocation({
+		    accuracy: '100m',
+		    autoStop: true,
+		    filter: 1
+		}, function(ret, err){
+		    if(ret.status){
+		    	lat = ret.lat;
+		        lon = ret.lon;
+                timestamp = ret.timestamp;
+//		        alert(JSON.stringify(ret));
+		        
+		    }else{
+//		        alert(err.code);
+		    }
+		});
+    }
+    //根据地址查找坐标
+    function getCoordsFromName(){
+    	api.showProgress({
+		    style: 'default',
+		    animationType: 'fade',
+		    title: '定位中...',
+		    text: '请稍候...',
+		    modal: false
+		});
+    	map.getCoordsFromName({
+		    city: '北京',
+		    address: '天安门'
+		},function(ret,err){
+			api.hideProgress();
+		    if(ret.status){
+		       alert(JSON.stringify(ret));
+		    }
+		});
+    }
+    /*
+    *根据坐标查找地址
+    *获取我的坐标地址
+    */
+    function getNameFromCoords(){
+    	api.showProgress({
+		    style: 'default',
+		    animationType: 'fade',
+		    title: '定位中...',
+		    text: '请稍候...',
+		    modal: false
+		});
+    	map.getNameFromCoords({
+		    lon: lon,
+		    lat: lat
+		},function(ret,err){
+			api.hideProgress();
+		    if(ret.status){
+		        alert(JSON.stringify(ret));
+		    }
+		});
+    }
+    /*
+    *两点距离
+    */
+    function getDistance(){
+    	api.showProgress({
+		    style: 'default',
+		    animationType: 'fade',
+		    title: '定位中...',
+		    text: '请稍候...',
+		    modal: false
+		});
+    	map.getDistance({
+		    start: {
+		        lon: lon,
+		        lat: lat
+		    },
+		    end: {
+		        lat: 39.915174,
+		        lon: 116.403901
+		    }
+		},function(ret){
+			api.hideProgress();
+		    if(ret.status){
+		        alert("距离天安门约："+ret.distance+"米");
+		    }
+
+		});
+    }
+    /*
+    *setCenter
+    *设置地图中心点
+    */
+    function setCenter(){
+    	api.toast({
+		    msg: '定位中',
+		    duration:1500,
+		    location: 'top'
+		});
+    	map.setCenter({
+		    coords: {
+		        lon: lon,
+		        lat: lat
+		    },
+		    animation:false
+		});
+    }
+    /*
+    *showUserLocation 会自动移动地图可视区域中心点到用户当前坐标位置
+	*
+    */
+    function showUserLocation(mode,durationTime){
+    	api.toast({
+		    msg: '定位中',
+		    duration:durationTime,  //1500默认
+		    location: 'top'
+		});
+    	map.showUserLocation({
+		    isShow: true,
+		    trackingMode: mode //显示用户位置  none 标准模式(默认)  follow 跟踪模式  compass 罗盘模式
+		});
+		//缩放一下
+		setZoomLevel();
+//		alert('已点击用户定位');
+    }
+    /*
+    *setZoomLevel
+    *设置缩放等级
+    */
+    function setZoomLevel(){
+    	map.setZoomLevel({
+		    level: 18
+		});
+    }
+    /*
+    *setRotation
+    *设置旋转角度
+    */
+    function setRotation(){
+    	map.setRotation({
+		    degree: 90
+		});
+    }
+    /*
+    *setOverlook
+    *设置俯视角度
+    */
+    function setOverlook(){
+		map.setOverlook({
+		    degree: -30
+		});
+    }
+    /*
+    *setScaleBar
+    *比例尺
+    */
+    function setScaleBar(){
+    	map.setScaleBar({
+		    show: true,
+		    position: {
+		      x:0,
+		      y:80
+		    }
+		});
+    }
+    /*
+    *setCompass
+    *指南针位置
+    */
+    function setCompass(){
+    	map.setCompass({
+		    position: {
+		      x:50,
+		      y:50+80
+		    }
+		});
+    }
+    /*
+    *setTraffic
+    *交通路况
+    */
+    function setTraffic(){
+    	map.setTraffic({
+		    traffic: true
+		});
+    }
+    /*
+    *setHeatMap
+    *设置当前城市为热力图
+    */
+    function setHeatMap(){
+    	map.setHeatMap({
+		    heatMap: true
+		});
+		map.setZoomLevel({
+		    level: 13
+		});
+    }
+    /*
+    *setBuilding
+    *是否显示3d
+    */
+    function setBuilding(){
+    	map.setBuilding({
+		    building: true
+		});
+		alert('设置成功，放大地图查看效果');
+    }
+    /*
+    *setRegion
+    *设置地图显示范围（矩形区域）
+    */
+    function setRegion(){
+    	map.setRegion({
+		    lbLon: 116.027143, 
+		    lbLat: 39.772348, 
+		    rtLon: 116.832025, 
+		    rtLat: 40.126349,
+		    animation: true
+		});
+    }
+    /*
+    *transCoords
+    *坐标转换
+    */
+    function transCoords(){
+    	alert('注意该方法需要重写加入mcode');
+    	map.transCoords({
+		    type: "common",
+		    lon: 116.351,
+		    lat: 39.283,
+		    mcode: '85:48:36:04:B6:A8:10:FB:A3:47:EB:D2:BB:88:ED:09:A0:4E:F4:41;com.comeoffbest.xxxt'
+		}, function(ret, err){
+		    alert(JSON.stringify(ret));
+		});
+    }
+    /*
+    *addEventListener
+    *监听事件
+    */
+    function addEventListener(){
+    	alert("将会监听地图双击事件,请双击地图");
+    	map.addEventListener({
+		    name: 'dbclick'
+		},function(ret){
+		    if(ret.status){
+		        alert(JSON.stringify(ret));
+		    }
+		});
+    }
+    /*
+    *停止监听
+    */
+    function removeEventListener(){
+    	map.removeEventListener({
+		    name: 'dbclick'
+		});
+		alert("已取消监听双击事件");
+    }
+    /*
+    *addAnnotations
+    *添加标注信息
+    */
+//  function addAnnotations(){
+//  	alert("该方法封装了标注点击弹出气泡");
+//  	map.addAnnotations({
+//		    annotations: [{
+//		        id: 1, lon: 116.315348, lat: 39.985065
+//		    },
+//		    {
+//		        id: 2, lon: 116.317665, lat: 39.98494
+//		    },
+//		    {
+//		        id: 3, lon: 116.321402, lat: 39.984705
+//		    }],
+//		    icon: 'widget://image/mark.png',
+//		    draggable: true
+//		}, function(ret){
+//		    if(ret){
+//		    	
+//		    	//设置点击标注时弹出的气泡信息
+//		        map.setBubble({
+//				    id: ret.id,
+//				    bgImg: 'widget://image/mapbg.png',
+//				    content: {
+//				        title: '应巡点'+ret.id,
+//				        subTitle: '这是第'+ret.id+'个应巡点',
+//				        illus: 'widget://image/liulangnan2.jpg'
+//				    },
+//				    styles: {
+//				        titleColor: '#009900',
+//				        titleSize: 14,
+//				        subTitleColor: '#999',
+//				        subTitleSize: 12,
+//				        illusAlign: 'left'
+//				    }
+//				}, function(ret){
+//				    if(ret){
+//				        alert(JSON.stringify(ret));
+//				    }
+//				});
+//		    }
+//		});
+//  	map.setCenter({
+//		    coords: {
+//		        lon: 116.297,
+//		        lat: 40.109
+//		    },
+//		    animation:false
+//		});
+//  }
+    /*
+	*addBillboard
+	*添加布告牌
+    */
+    function addBillboard(){
+    	//设置下中心点
+    	setCenter();
+		map.addBillboard({
+		    id: 4,
+		    coords: {
+		        lon: lon,
+		        lat: lat
+		    },
+		    bgImg: 'widget://image/mapbg2.png',
+		    content: {
+		        title: '大标题大标题大标题大标题',
+		        subTitle: '概述内容概述内容概述内容',
+		        illus: 'widget://image/liulangnan2.jpg'
+		    },
+		    styles: {
+		        titleColor: '#009900',
+		        titleSize: 14,
+		        subTitleColor: '#999',
+		        subTitleSize: 12,
+		        illusAlign: 'left'
+		    }
+		}, function(ret){
+		    if(ret){
+		        alert(JSON.stringify(ret));
+		    }
+		});
+    }
+
+    /*
+    *searchRoute
+    *搜索路线方案
+    */
+    function searchRoute(){
+    	api.showProgress({
+		    style: 'default',
+		    animationType: 'fade',
+		    title: '搜索中...',
+		    text: '请稍候...',
+		    modal: false
+		});
+    	map.searchRoute({
+		    id: 1,
+		    type: 'drive',
+		    policy: 'ecar_fee_first',
+		    start: {
+		        lon: 116.403838,
+		        lat: 39.914437
+		    },
+		    end: {
+		        lon: 116.384852,
+		        lat: 39.989576
+		    }
+		}, function(ret, err){
+		    if(ret.status){
+		        api.alert({msg:JSON.stringify(ret)});
+		        drawRoute(1);
+		    }
+		    api.hideProgress();
+		});
+		
+    }
+    /*
+    *绘制路线（安卓）
+    */
+    function drawRoute(id){
+    	map.searchRoute({
+		    type: 'drive',
+		    policy: 'ecar_fee_first',
+		    start: {
+		        lon: 116.403838,
+		        lat: 39.914437
+		    },
+		    end: {
+		        lon: 116.384852,
+		        lat: 39.989576
+		    }
+		}, function(ret, err){
+		    if(ret.status){
+		        map.drawRoute({
+		            id: id,
+		            index: 0,
+		            styles: {
+		                start: {
+		                    icon: 'widget://image/mark_start.png'
+		                },
+		                end: {
+		                    icon: 'widget://image/mark_end.png'
+		                }
+		            }
+		        }, function(ret){
+		           api.alert({msg:JSON.stringify(ret)});
+		        });
+		    } else {
+		        api.alert({msg:JSON.stringify(err)});
+		    }
+		});
+    }
+    /*移除指定的路线*/
+    function removeRoute(){
+    	map.removeRoute({
+		    ids: [1]
+		});
+    }
+    /*
+    *searchInCity
+    *根据单个关键字搜索兴趣点
+    */
+    function searchInCity(){
+    	api.showProgress({
+		    style: 'default',
+		    animationType: 'fade',
+		    title: '搜索中...',
+		    text: '请稍候...',
+		    modal: false
+		});
+    	map.searchInCity({
+		    city: '北京',
+		    keyword: '学校',
+		    pageIndex: 0,
+		    pageCapacity: 20
+		},function(ret){
+			api.hideProgress();
+		    if(ret.status){
+
+		       	alert(JSON.stringify(ret.results));
+		       	var results = ret.results;
+		       	for(var i in results){
+			       	map.addAnnotations({
+					    annotations: [{
+					        id: results[i].uid,
+					        lon: results[i].lon,
+					        lat: results[i].lat
+					    }],
+					    icon: 'widget://image/mark.png',
+					    draggable: true
+					}, function(ret){
+					    if(ret){
+					    	
+					    }
+					});
+			    }
+
+			    map.setCenter({
+				    coords: {
+				        lon: results[1].lon,
+				        lat: results[1].lat
+				    },
+				    animation:false
+				});
+
+		    }else{
+		        alert(JSON.stringify(err));
+		    }
+		});
+    }
+    /*
+    *searchNearby
+    *圆形区域内搜索兴趣点
+    */
+    function searchNearby(){
+    	map.searchNearby({
+		    keyword: '应巡点',
+		    lon: 116.315348,
+		    lat: 39.985065,
+		    radius: 2000
+		},function(ret,err){
+		    if(ret.status){
+		        alert(JSON.stringify(ret));
+		    }else{
+		        alert(JSON.stringify(err));
+		    }
+		});
+    }
+    /*
+	*autocomplete
+	*根据关键字返回建议搜索关键字
+    */
+    function autocomplete(){
+    	map.autocomplete({
+		    keyword: '北京西站',
+		    city: '北京'
+		},function(ret){
+		    if(ret.status){
+		        alert(JSON.stringify(ret.results)); 
+		    }else{
+		        alert(JSON.stringify(err));
+		    }
+		});
+    }
+    
+    
+//设置折线
+    function addline(id,points){
+ 	    map.addLine({
+  	    id: id,
+  	    styles: {
+  	        borderColor: '#FF0000',
+ 	        borderWidth: 3
+ 	    },
+ 	    points:points
+// 	    points: [{
+//	       lon:116.315396,
+// 		       lat:39.9882
+// 	    },{
+// 	        lon: 116.317834,
+// 	        lat: 39.98799
+//	     }]
+		});
+   
+    }
+ //设置折线结束      
+    
+//写外部数据库开始20160303
+    function RW_OUT_DB(data1){
+        api.showProgress();//显示加载进度框
+                //使用api.ajax请求数据，具体使用方法和参数请看官方文档，这里使用get方法演示   
+//        alert(JSON.stringify(data1)+"开始写外部数据库");     
+        api.ajax({
+            url:'http://192.168.2.222/map/post.php',//如果地址访问不到会请求出错，请填写自己的接口地址
+            method:'post',
+            cache:'false',
+            timeout:30,
+            dataTpye:'json',
+            contentType:"application/json; charset=utf-8",
+//          data:{ values:{"timestamp":data1.timestamp,"lon":data1.lon,"status":data1.status,"lat":data1.lat,"locationType":data1.locationType,
+//          "speeds":speeds,"distances":distances,"miao":miao,"mobile":mobile,"username":username} }
+            data:{ values:data1}
+            },function(ret,err){
+            api.hideProgress();//隐藏加载进度框
+            if(ret){
+                api.toast({
+	                msg:JSON.stringify(ret)
+                });
+ //               alert(JSON.stringify(ret));
+//              api.closeWin({
+//              });
+                }else{
+//                api.alert({msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)});
+                }
+            });
+    }
+
+//写外部数据库结束    
+
+//写内部数据库开始    
+    function RW_IN_DB(data1){
+//  	api.showProgress({
+//		    style: 'default',
+//		    animationType: 'fade',
+//		    title: '数据写入中...',
+//		    text: '请稍候...',
+//		    modal: false
+//		});    
+        var model = api.require("model");
+//        data1 = {"timestamp":1457673090705,"lon":116.31538,"status":true,"lat":39.988232,"locationType":"OffLine"};
+        model.insert({
+            class: "map_peace",
+//          value: {"timestamp":data1.timestamp,"lon":data1.lon,"status":data1.status,"lat":data1.lat,"locationType":data1.locationType,
+//          "speeds":speeds,"distances":distances,"miao":miao,"mobile":mobile,"username":username} 
+            value:data1
+            }, function(ret, err){
+            $api.toast('写入内部数据库',"ret: " + JSON.stringify(ret) + "speeds: " + speeds + "\nerr: " + JSON.stringify(err),2000);
+//                alert("ret: 写数据库：" + JSON.stringify(ret) + "speeds: " + speeds + "\nerr: " + JSON.stringify(err));
+
+        });  
+//      api.hideProgress();
+    }
+//写内部数据库结束    
+
+//按条件读内部数据库开始
+//创建查询条件,绘制路径
+    function chaxun(){
+        var date = new Date();
+        var query = api.require("query");
+        query.createQuery(function(ret, err) {
+        if (ret && ret.qid) {
+            var queryId = ret.qid;
+            query.justFields({
+                qid:queryId,
+                value:["lon","lat","updatedAt"]
+            });
+//      query.whereStartWith({
+//          qid: queryId,
+//          column: "timestamp",       
+//          value:"145878"        
+//      });  
+    
+            query.whereEqual({
+                qid: queryId,
+                column: 'username',
+                value: username
+            });
+            query.whereGreaterThan({
+                qid: queryId,
+                column: 'updatedAt',
+                value: now
+            }); 
+            query.desc({
+                qid: queryId,
+                column: "updatedAt"
+            });
+            query.limit({
+                qid:queryId,
+                value:"60"
+            });
+        var model = api.require("model");
+        model.findAll({
+            class: "map_peace",
+            qid: queryId
+        }, function(ret, err){
+
+          alert("ret: " + JSON.stringify(ret) + "\nerr: " + JSON.stringify(err));
+            addline(1,ret);
+        });
+        }
+        });
+    }
+//按条件读内部数据库结束
+    //获取坐标并写入数据库开始
+    function getLocationAddDB(){
+    	map.getLocation({
+		    accuracy: '10m',
+		    autoStop: true,
+		    filter: 1
+		}, function(ret, err){
+		    if(ret.status){
+		        getdistances(ret);
+		    	lat = ret.lat;
+		        lon = ret.lon;
+		        miao = (ret.timestamp - timestamp) / 1000;
+		        speeds = distances / miao ;
+		        timestamp = ret.timestamp;	
+		        
+                var data1={};
+                data1["timestamp"] = timestamp;
+                data1["lon"] = lon;
+                data1["lat"] = lat;
+                data1["status"] = ret.status;
+                data1["locationType"] = ret.locationType;
+                data1["speeds"] = speeds;
+                data1["distances"] = distances;
+                data1["miao"] = miao;
+                data1["mobile"] = mobile;
+                data1["username"] = username;   	        
+  
+		        if(username!="admin"){
+		            RW_OUT_DB(data1);
+		        }	
+		        
+		        RW_IN_DB(data1);  //写入APICLOU数据库
+//		        alert("定位值："+JSON.stringify(ret));
+		    }else{
+//		        alert(err.code);
+		    }
+		});
+    }
+
+//获取坐标并写入数据库结束
+
+//获取坐标并写入数据库开始1
+    function getLocationAddDB1(){
+//        showUserLocation("none",4000);
+        map.getCenter(function(ret){
+            if(ret.status){
+                getdistances(ret);
+                lat = ret.lat;
+                lon = ret.lon;
+                miao = (ret.timestamp - timestamp) / 1000;
+                speeds = distances / miao ;
+                timestamp = ret.timestamp;      
+                RW_OUT_DB(ret);
+                RW_IN_DB(ret);  //写入APICLOU数据库
+//              alert("定位值："+JSON.stringify(ret));
+            }else{
+ //               alert(err.code);
+            }
+        });
+    }
+
+//获取坐标并写入数据库结束1
+    //获取坐标并写入数据库开始
+    function getLocationAddDB2(){
+        map.getLocation({
+            accuracy: '10m',
+            autoStop: true,
+            filter: 1
+        }, function(ret, err){
+            if(ret.status){
+                miao = (ret.timestamp - timestamp) / 1000;
+                timestamp = ret.timestamp;    
+
+        map.getCenter(function(ret){
+            if(ret.status){
+                getdistances(ret);
+                lat = ret.lat;
+                lon = ret.lon;
+
+            }else{
+                alert(err.code);
+            }
+        });
+
+                speeds = distances / miao ;
+  
+                RW_OUT_DB(ret);
+                RW_IN_DB(ret);  //写入APICLOU数据库
+//              alert("定位值："+JSON.stringify(ret));
+
+            }else{
+ //               alert(err.code);
+            }
+        });
+    }
+
+//获取坐标并写入数据库结束
+//求距离开始
+    function getdistances(data2){
+    	map.getDistance({
+		    start: {
+		        lon: lon,
+		        lat: lat
+		    },
+		    end: {
+		        lat: data2.lat,
+		        lon: data2.lon
+		    }
+		},function(ret){
+		    if(ret.status){
+		        distances = ret.distance;
+		    }
+		});    
+    }
+
+//求距离结束
+//应巡点加载开始
+    function chaxunyingxundian(quduanNum,xianluNum){
+        var query = api.require("query");
+        query.createQuery(function(ret, err) {
+        if (ret && ret.qid) {
+            var queryId = ret.qid;
+            query.justFields({
+                qid:queryId,
+                value:["lon","lat","updatedAt","quduanNum","xianluNum","yingxundianNum"]
+            });
+//      query.whereStartWith({
+//          qid: queryId,
+//          column: "timestamp",       
+//          value:"145878"        
+//      });        
+//          query.desc({
+//              qid: queryId,
+//              column: "updatedAt"
+//          });
+////          query.limit({
+//              qid:queryId,
+//              value:"60"
+//          });
+        var model = api.require("model");
+        model.findAll({
+            class: "yingxundian",
+            qid: queryId
+        }, function(ret, err){
+            yxdArr=ret;
+            alert("ret: " + JSON.stringify(yxdArr) + "\nerr: " + JSON.stringify(err));
+            if(yxdArr){
+                for(var i=0;i<yxdArr.length;i++){
+                    map.addAnnotations({
+                        annotations: [{
+                            id: yxdArr[i].yingxundianNum,
+                            lon: yxdArr[i].lon,
+                            lat: yxdArr[i].lat
+                        }],
+                        icon: 'widget://image/mark.png',
+                        draggable: false
+                    }, function(ret){
+                        
+                    });
+                    setBubble(yxdArr[i].yingxundianNum,yxdArr[i].quduanNum,yxdArr[i].xianluNum);
+                }
+//将第一个点置于屏幕中心
+//              map.setCenter({
+//                  coords: {
+//                      lon: yxdArr[0].lon,
+//                      lat: yxdArr[0].lat
+//                  },
+//                  animation:false
+//              });
+            }else{
+                alert("未找到应巡点！");
+            } 
+
+//          for(var i=0;i<ret.length;i++){
+////                yingxundian(100+i,ret[i].lon,ret[i].lat,Pradius,PborderColor,PborderWidth,PfillColor);
+//              setBubble(100+i);   //设置气泡
+//          }
+        });
+        }
+        });
+    }
+//应巡点加载结束
+//设置应巡点汽泡开始
+    function setBubble(Pid,quduan,xianlu){
+        map.setBubble({
+            id: Pid,
+            bgImg: 'widget://res/bubble_bg.png',
+            content: {
+                title: Pid,
+                subTitle: '区段：'+quduan+xianlu,
+                illus: 'http://ico.ooopic.com/ajax/iconpng/?id=145044.png'
+            },
+            styles: {
+                titleColor: '#000',
+                titleSize: 16,
+                subTitleColor: '#cc0033',  
+                subTitleSize: 12,
+                illusAlign: 'left'
+            }
+        }, function(ret){
+            var bubbleArr;
+            if(ret){
+                //获取本标注点的坐标
+                map.getAnnotationCoords({
+                    id: ret.id
+                }, function(ret){
+                    if(ret){
+                        bubbleArr = ret;
+                        alert('这个气泡的坐标是:'+ JSON.stringify(bubbleArr));
+
+                //定位获取当前位置坐标
+//                getLocationNow();                    
+                map.getLocation({
+                    accuracy: '10m',
+                    autoStop: true,
+                    filter: 1
+                }, function(ret, err){
+                    if(ret.status){
+                        latNow = ret.lat;
+                        lonNow = ret.lon;
+                        timestampNow = ret.timestamp;
+                        alert(latNow + "A"+ lonNow)
+                        //求当前位置到标注点的距离开始
+                        map.getDistance({
+                            start: {
+                                lon: lonNow,
+                                lat: latNow
+                            },
+                            end: {
+                                lon: bubbleArr.lon,   //标注点坐标
+                                lat: bubbleArr.lat
+                            }
+                        },function(ret){
+                            if(ret.status){
+                                alert(ret.distance + "当前位置坐标：" + latNow + "U"+ lonNow +"当前气泡坐标：" + JSON.stringify(ret));  
+                                dadian(ret.distance);
+                            }
+                        });                        
+                        //求当前位置到标注点的距离结束
+                        
+                        
+                    }else{
+                        alert(err.code);
+                    }
+                });  //获取当前位置坐标结束                   
+//1111                   
+                    }
+                });        
+            }                    
+//获取本地标注点结束
+        });
+    }
+//设置汽泡结束
+//打点开始
+    function dadian(distances1){
+//       alert("进入打点" + distances1);
+        if(distances1<20){
+        
+            alert("打点成功！" + distances1);
+        }
+        else{
+            alert("打点失败，请确定在巡线点附近！" + distances1);
+        };
+    }
+
+//打点结束
+//立即定位开始
+    function getLocationNow(){
+                map.getLocation({
+                    accuracy: '10m',
+                    autoStop: true,
+                    filter: 1
+                }, function(ret, err){
+                    if(ret.status){
+                        latNow = ret.lat;
+                        lonNow = ret.lon;
+                        timestampNow = ret.timestamp;
+                        alert(latNow + "A"+ lonNow)
+                    }else{
+                        alert(err.code);
+                    }
+                });    
+    }
+//立即定位结束
+
+
+
+//获取离线地图开始
+    function offlinemap(){
+        map.searchCityByName({
+            name: "北京"
+        }, function(ret){
+            if(ret.status){
+                alert(JSON.stringify(ret)); 
+            }
+        });
+//  map.start({
+//      cityID: 1
+//  }, function(ret){
+//      if(ret.status){
+//          alert(JSON.stringify(ret)); 
+//      }
+//  });    
+//  
+map.getHotCityList(function(ret){
+    if(ret.status){
+        alert(JSON.stringify(ret)); 
+    }
+});
+map.start({
+    cityID: 131
+}, function(ret){
+    if(ret.status){
+        alert(JSON.stringify(ret)); 
+    }
+});
+
+    }
+//获取离线地图结束
+//存坐标开始
+    function saveCoordinate(){
+        userArr.name = 'kenny';
+        userArr.job = 'kenny@163.com';
+        $api.setStorage(key, user);
+    
+    }
+//存坐标结束
+//字符 串转日期
+    function StringToDate(DateStr){
+        var converted = Date.parse(DateStr);
+        var myDate = new Date(converted);
+        if (isNaN(myDate)){
+            var arys = DateStr.split('-');
+            myDate = new Date(arys[0],--arys[1],arys[2]);
+            }
+            return myDate;
+    }
+</script>
+</html>

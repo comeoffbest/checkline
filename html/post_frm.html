@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+</head>
+<style type="text/css">
+.aui-content {
+    background: #ffffff;
+    overflow: hidden;
+    padding: 15px;
+}
+p {
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+</style>
+<body>
+
+ <button onclick="postPersonInfo()">点我上传数据</button>
+ 
+<form action="http://192.168.2.222/map/post.php" method="post">
+id <input type="text" name="id1" size="25" maxlength="25" />
+<br />
+name <input type="text" name="name1" size="25" maxlength="25" />
+<br />
+sex <input type="text" name="sex1" size="25" maxlength="25" />
+<br />
+age <input type="text" name="age1" size="25" maxlength="25" />
+<br />
+<p>
+<input type="submit"/>
+</p>
+
+
+
+</form>
+ 
+ 
+</body>
+<script type="text/javascript" src="../script/api.js" ></script>
+<script type="text/javascript" src="../script/aui-range.js" ></script>
+        <script type="text/javascript">
+//echo json_encode(obj);       
+        
+//        var data1 = {"id1":"116","name1":"张6","sex1":"女1","age1":"52"} ;
+        function postPersonInfo(data1){
+                api.showProgress();//显示加载进度框
+                //使用api.ajax请求数据，具体使用方法和参数请看官方文档，这里使用get方法演示
+                api.ajax({
+                url:'http://192.168.2.222/map/post.php',//如果地址访问不到会请求出错，请填写自己的接口地址
+                method:'post',
+                cache:'false',
+                timeout:30,
+                dataTpye:'json',
+                contentType:"application/json; charset=utf-8",
+  //              data:{ values:data1 }
+                data:{ values:{"timestamp":data1.timestamp,"lon":data1.lon,"status":data1.status,"lat":data1.lat,"locationType":data1.locationType} }
+  //              { values:{"id1":"115","name1":"张3","sex1":"女1","age1":"51"} }
+  
+                },function(ret,err){
+                api.hideProgress();//隐藏加载进度框
+                if(ret){
+                    api.alert(ret);
+                    api.closeWin({
+                    });
+                }else{
+//                api.alert({msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)});
+                }
+                });
+        }
+        </script>
+</html>

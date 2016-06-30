@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<widget id="A6903785878897" version="0.0.1"> 
+  <name>巡线系统</name>  
+  <description>巡线系统</description>  
+  <author email="comeoffbest@163.com" href="http://www.comeoffbest.com">comeoffbest</author>  
+  <content src="index.html"/>  
+  <preference name="appBackground" value="rgba(0,0,0,0)"/>  
+  <preference name="windowBackground" value="rgba(0,0,0,0)"/>  
+  <preference name="frameBackgroundColor" value="rgba(0,0,0,0)"/>  
+  <preference name="autoLaunch" value="true"/>  
+  <preference name="autoUpdate" value="true"/>  
+  <preference name="smartUpdate" value="false"/>  
+  <preference name="debug" value="false"/>  
+  <preference name="statusBarAppearance" value="true"/>  
+  <preference name="fullScreen" value="true"/>  
+  <permission name="location"/>  
+  <permission name="internet"/>  
+  <permission name="camera"/>  
+  <permission name="readPhoneState"/>  
+  <permission name="record"/>  
+  <permission name="fileSystem"/>  
+  <permission name="bootCompleted"/>  
+  <permission name="hardware"/>  
+  <permission name="call"/>  
+  <permission name="sms"/>  
+  <permission name="contact"/>  
+  <access origin="*"/>  
+  <feature name="bMap"> 
+    <param name="android_api_key" value="e9s37Cnmsm4XGj6eIfHaxMDw"/>  
+    <param name="ios_api_key" value="d5LQO05C5BAyAXjzOkkLvQrC"/> 
+  </feature> 
+</widget>

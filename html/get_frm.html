@@ -1,0 +1,222 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+</head>
+<style type="text/css">
+.aui-content {
+    background: #ffffff;
+    overflow: hidden;
+    padding: 15px;
+}
+p {
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+</style>
+<body>
+   <button onclick="showPersonInfo()">点我获取数据</button>
+   <button onclick="getpicture()">打开相机</button> <br />
+   <button onclick="selectImage()">获取缩略图</button> <br />
+   <button onclick="tupian()">图片</button> <br />
+   <button onclick="getspeedCalculate()">离线地图查看</button> <br />
+
+x <input type="text" id="spX" size="25" maxlength="25" /><br />
+
+y <input type="text" id="spY" size="25" maxlength="25" /><br />
+
+z <input type="text" id="spZ" size="25" maxlength="25" /><br />
+xyz <input type="text" id="XYZ" size="25" maxlength="25" /><br />
+xyz1 <input type="text" id="XYZ1" size="25" maxlength="25" /><br />
+<br />   
+          
+ <div ><input id="X"  />       </div>  <br />   
+ <div  ><input id="Y" />       </div>  <br />
+ <div  ><input id="Z" />       </div>         
+        
+</body>
+<script type="text/javascript" src="../script/api.js" ></script>
+<script type="text/javascript" src="../script/aui-range.js" ></script>
+<script type="text/javascript">
+    var spX,spY,spZ;
+        map = api.require('bMap'); 
+    function showPersonInfo(){
+        api.showProgress();//显示加载进度框
+        //使用api.ajax请求数据，具体使用方法和参数请看官方文档，这里使用get方法演示
+        api.ajax({
+        url:'http://192.168.2.222/map/get.php',//如果地址访问不到会请求出错，请填写自己的接口地址
+        method:'get',
+        cache:'false',
+        timeout:30,
+        dataTpye:'json',
+        },function(ret,err){
+        api.hideProgress();//隐藏加载进度框
+        if(ret){
+             for(var i=0;i<ret.length;i++){
+             var html='<br>'+'timestamp：'+ret[i].timestamp+'<br>'+'lon：'+ret[i].lon+'<br>'+'status：'+ret[i].status+'<br>'+'lat：'+ret[i].lat+'<br>'+'locationType：'+ret[i].locationType;        
+             document.write(html);
+             }
+        }else{
+        api.alert({msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)});
+        }
+        });
+    }
+    function getspeedStart(){
+        var linearAcceleration = api.require('linearAcceleration');
+        linearAcceleration.startListener({
+            type:2  //可选填0(特别快游戏用),1(游戏用 ),2(用户接口用 ),3( 取得倾斜度的时候使用)
+            },function(ret, err){
+//              alert("可获取状态:"+ret.state+"x轴:"+ret.x+"y轴:"+ret.y+"z轴:"+ret.z);
+//              var html='<br>'+'state：'+ret.state+'<br>'+'X：'+ret.x+'<br>'+'Y：'+ret.y+'<br>'+'Z：'+ret.z;        
+//              document.write(html);    
+                spX = ret.x;
+                spY = ret.y;
+                spZ = ret.z;
+                document.getElementById("spX").value = spX;
+                document.getElementById("spY").value = spY;
+                document.getElementById("spZ").value = spZ;
+             
+        });
+    }
+    function getspeedStop(){
+        var linearAcceleration = api.require('linearAcceleration');
+        linearAcceleration.closeListener();
+    }
+    function getspeedCalculate(){
+        document.getElementById("XYZ").value = Math.sqrt(spX*spX+spY*spY+spZ*spZ);
+    }
+    function getofflinemaplist(){
+        map.addOfflineListener(function(ret){
+            switch (ret.type)
+            {
+               case 0: {
+                   map.getUpdateInfoByID({
+                      cityID: 1
+                   },function(ret){
+                      api.alert({msg:ret.cityInfo.name+"下载进度："+ret.cityInfo.ratio});
+                   });
+               }
+               break;
+               case 1:  {
+                  alert('检测到离线包个数是：'+ret.state);
+               }
+               break;
+               case 2:  {
+                  alert('正在解压第state个离线包，导入时会回调此类型');
+               }
+               break;
+               case 3:  {
+                  alert('有state个错误包，导入完成后会回调此类型');
+               }
+               break;
+               case 4:  {
+                  alert('id为state的state城市有新版本,可调用update接口进行更新');
+               }
+               break;
+               case 5:  {
+                  alert('导入成功state个离线包，导入成功后会回调此类型');
+               }
+               break;
+               case 6:  {
+                  alert('新增离线包');
+               }
+               break;
+               default:
+               break;
+            }
+        });    
+
+    
+    }    
+    function openwin(){
+               api.openFrame({
+                    name: 'menu',
+                    url: 'track_frm.html',
+                    bounces: false,
+                    rect: {
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: 'auto'
+                  }
+                });  
+    }   
+    function getpicture(){
+api.getPicture({
+    sourceType: 'camera',
+    encodingType: 'jpg',
+    mediaValue: 'pic',
+    destinationType: 'url',
+    allowEdit: true,
+    quality: 50,
+    targetWidth: 100,
+    targetHeight: 100,
+    saveToPhotoAlbum: false
+}, function(ret, err){ 
+    if(ret){
+         alert(JSON.stringify(ret));
+    }else{
+         alert(JSON.stringify(err));
+    }
+});    
+    
+    }
+ //取图
+ function selectImage() {
+                        
+                        api.getPicture({
+                                sourceType: 'library',
+                                encodingType: 'jpg',
+                                mediaValue: 'pic',
+                                destinationType: 'url',
+                                allowEdit: true,
+                                quality: 100,
+                                targetWidth: 300,
+                                targetHeight: 100,
+                                saveToPhotoAlbum: false
+                        }, function(ret, err) {
+                                if (ret) {
+                                        if (ret.data !== "") {
+                                                imageArray.push(ret.data);
+                                                api.alert({
+                                                msg: imageArray.length
+                                        });
+                                                $("#add").before('<li ><img src="' + ret.data + '" ></li>');
+                                        }
+                                } else {
+                                        api.alert({
+                                                msg: err.msg
+                                        });
+                                }
+                        });
+                
+                }
+                
+   function tupian(){
+   alert("图片");
+var photoBrowser = api.require('photoBrowser');
+photoBrowser.open({
+    images: [ 
+        'fs://A6903785878897/picture/P-c1871ce.jpg', 
+        'fs://A6903785878897/image/head.png'
+    ],
+    placeholderImg: 'widget://res/img/apicloud.png',
+    bgColor: '#000'
+}, function(ret, err){    
+    if( ret ){
+        alert( JSON.stringify( ret ) );
+    }else{
+        alert( JSON.stringify( err ) );
+    }
+});   
+   alert("图片1");
+   }                  
+    
+    
+    
+</script>
+</html>

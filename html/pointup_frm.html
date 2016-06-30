@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>APP</title>
+    <script type="text/javascript" src="../js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+        <link rel="stylesheet" type="text/css" href="./css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css">
+    <script type="text/javascript">
+
+    </script>
+</head>
+<style type="text/css">
+.aui-content {
+    background: #fff;
+    overflow: hidden;
+    padding: 15px;
+}
+
+.lookLikeAMenulist{
+     -webkit-appearance:menulist;
+     -moz-appearance:menulist;
+}
+.lookLikeNo{
+     -webkit-appearance:none;
+     -moz-appearance:none;
+}
+/*p {
+    margin: 10px 0;
+    overflow: hidden;
+}
+        .input-wrap input {
+            display: block;
+            -webkit-box-flex: 1;
+            background-color: rgba(255, 255, 255, 0);
+            outline: none;
+            height: 30px;
+        }*/
+
+        i {
+            display: block;
+            width: 30px;
+            height: 30px;
+            background-size: 30px;
+            background-repeat: no-repeat no-repeat;
+            background-position: center;
+        }        
+ 
+        .button {
+            display: block;
+            color: white;
+            margin: 0 40px;
+            text-align: center;
+            border-radius: 8px;
+            height: 40px;
+            line-height: 40px;
+            background-color: #FFF; 
+        }
+        .button.active, .button:active{
+            color: #fff;
+            background-color: #ff9900;
+            border: 1px solid #ff9900;        
+        }
+        .button.green {
+            background-color: #FF7800;  /* 36b05e */
+        }
+        .button.green.active, .button.green:active{
+            color: #fff;
+            background-color: #ff9900;
+            border: 1px solid #ff9900;        
+        }
+
+		 	.mui-content-padded {
+				padding: 10px;
+			}
+		 	.mui-input {
+				background-color:#fff;
+			}
+			.mui-btn1 {
+			background-color: #FFF; 
+  
+        
+</style>
+<body>
+    <br />
+        <p>   
+        <div class="mui-content mui-card">
+            <form class="mui-input-group  ">
+               <table >
+                 <td style="width: 33px;">
+                    <div  class="mui-input-row mui-checkbox mui-left ">
+                        <input style="left:0px;" name="checkbox" value="Item 1" type="checkbox" disabled="disabled" >
+                    </div>
+                 </td>
+                 <td> 安428-23332</td>
+                 <td style="width: 1%;"><br /><br /><br /></td>
+                 <td style="width: 40%">
+                        <button style="border:0px;background-color: #fcc" type="button" class="mui-btn aui-iconfont">
+                          <div id="abcv"> 第三方施工</div>
+                        </button>                  
+                 </td>
+                 <td style="width: 1%; "><button >影像采集</button></td>
+               </table>
+            </form>
+        </div>  
+        </p> 
+        <p>
+        <div class="mui-content mui-card">
+            <form class="mui-input-group  ">
+               <table >
+                 <td style="width: 33px;">
+                    <div  class="mui-input-row mui-checkbox mui-left">
+                        <input style="height: 100;left:0px;" name="checkbox" value="Item 1" type="checkbox" >
+                        
+                    </div>
+                 </td>
+                 <td> 安428-23330</td>
+                 <td style="width: 1%;"><br /><br /><br /></td>
+                 <td style="width: 40%">
+                        <button style="border:0px;background-color: #fcc" type="button" class="mui-btn aui-iconfont">
+                                                                       普通点
+                        </button>                  
+                 </td>
+                 <td style="width: 1%; ">
+                        <button onclick="openWin('imageVideo');" style="border:0px;background-color: #fcc" type="button" class="mui-btn aui-iconfont">
+                                                                       普通点
+                        </button>                
+                 </td>
+               </table>
+        </div>   
+        </p>   
+
+    
+    <div id="up1">
+        <table id="myTable" border="1">
+            <tr>
+             <td>Row 1</td>
+             <td>Row 1</td>
+             <td>Row 1</td>
+             <td><input type="button" value="Delete" onclick="deleteRow(this)"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="footer" class="border-t">
+        <ul class="flex-wrap" >
+
+        </ul>
+                    
+    </div>
+<!--    <div id= "xunjian" class="aui-content " style="background-color: #f9f2f4;">         
+      <ul id="list" >
+          
+      </ul> 
+    </div> -->
+    
+    <br />
+    <br />
+    <br />
+
+	<div style="position: fixed;bottom:10px;left:0px;width:100%;height:50px;">
+ 	 <div class="button green" id="login" tapmode="" onclick="openWin('imageVideo');">全部上报</div>
+	</div>	
+</body>
+<script type="text/javascript" src="../script/api.js" ></script>
+<script src="../js/mui.min.js"></script>
+<script type="text/javascript">
+    var spX,spY,spZ;
+    var winHeight,
+        map,
+        lat='39.989539',     
+        lon='116.384767';
+    apiready = function(){
+//      winHeight = api.pageParam.height;
+//      api.parseTapmode();
+//      map = api.require('bMap');
+//      getLocation();
+//        open();
+
+    }; 
+    //getL
+    function fresh(){
+           alert("good");  
+    
+    }
+    function openWin(name){
+        api.openWin({
+            name: ''+name+'',
+            url: './'+name+'_win.html',
+            bounces:false,
+            delay: 300
+        });
+    } 
+ //添加标记  
+  function add_flag0(){  
+  var localmarker=new BMap.Marker(new BMap.Point(lon,lat));    
+    map.addOverlay(localmarker);   
+  }        
+//删除行
+function deleteRow(r)
+{
+var i=r.parentNode.parentNode.rowIndex;
+document.getElementById('myTable').deleteRow(i);
+}		
+function jsRemoveItemFromSelect(objSelect,objItemValue)
+{
+     //判断是否存在
+     if(jsSelectIsExitItem(objSelect,objItemValue))
+     {
+         for(var i=0;i<objSelect.options.length;i++)
+         {
+             if(objSelect.options[i].value == objItemValue)
+             {
+                 objSelect.options.remove(i);
+                 break;
+             }
+         }       
+         alert("成功删除");           
+     }
+     else
+     {
+         alert("该select中 不存在该项");
+     }   
+}			
+
+
+			
+</script>
+</html>

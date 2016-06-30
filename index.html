@@ -1,0 +1,428 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>巡线管理系统</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/common1.css"/>   
+    <style>
+        body {background-color: #FFFFFF;}    /* ff9933 */
+        header{ background-color: #FF7800; } /* 1abc9c */
+        header ul li { height: 50px; line-height: 50px; text-align: center; display: none; color: #FFFFFF; position:relative;font-size: 18px;  }
+        header ul li.active{ display: block; }
+        #footer{  background-color: #ffffff; }   /* ffffff  */
+        #footer ul li{  padding-top: 36px; padding-bottom: 4px; background: url() no-repeat center 2px; background-size: auto 30px; text-align: center; }
+        #footer ul li.active{ color: #6ab494; }  /* 6ab494  */
+        #footer ul li:nth-child(1){ background-image: url(./image/pointb.png); }
+        #footer ul li:nth-child(2){ background-image: url(./image/pointb.png); }
+        #footer ul li:nth-child(3){ background-image: url(./image/pointb.png); }
+        #footer ul li:nth-child(4){ background-image: url(./image/pointb.png); }
+        #footer ul li:nth-child(1).active{ background-image: url(./image/pointa.png); }
+        #footer ul li:nth-child(2).active{ background-image: url(./image/pointa.png); }
+        #footer ul li:nth-child(3).active{ background-image: url(./image/pointa.png); }
+        #footer ul li:nth-child(4).active{ background-image: url(./image/pointa.png); }
+/*        #footer .box{margin:50px auto;width:500px;height:auto;border:0px solid #000;}
+        #footer .box li{width:25%;display:block;height:50px;text-align:center;}
+        #footer .lens{margin:0 auto;}
+        #footer .lenb{float:left;}*/
+     /*.divcss5-left{float:left;width:250px;height:50px;border:1px solid #F00}*/ 
+     #list ul, li{list-style:none outside none;margin:0;padding:0}
+#list{border:0px solid gold; height:34px; display:flex; /*flex-direction:row;*/ text-align:center; justify-content:center;}
+#list li{/*font-family:"microsoft yahei"; font-size:50px;*/ background:#fff; color:#fff; margin:2px; flex-grow:1;}
+     
+     .divcss5-left{float:left;width:auto;height:auto;border:0px solid #F00} 
+     .divcss5-cent{margin:0 auto;width:auto;height:auto;border:0px solid #F00} 
+     
+#list .box{margin:50px auto;width:500px;height:auto;border:0px solid #000;}
+#list .box li{width:25%;display:block;height:50px;text-align:center;}
+#list .lens{margin:0 auto;}     
+     
+    </style>
+</head>
+<body>
+<div id="wrap" class="flex-wrap flex-vertical">
+    <header>
+        <div class="btn cancel" tapmode="" onclick="exitApp();"></div>
+        <div class="aui-bar aui-bar-nav aui-bar-primary" id="aui-header">
+            <a class="aui-btn aui-btn-warning1 aui-pull-left" tapmode onclick="openWin('my');">
+                <span class="aui-iconfont aui-icon-home"></span>
+            </a>  
+            <ul>
+            <li class="border-b active" >移动巡线   </li>
+            <li class="border-b" >移动巡线   </li>
+            <li class="border-b" >移动巡线   </li>
+            <li class="border-b" >移动巡线   </li>
+            </ul>  
+        </div> 
+        <div class="btn"></div>  
+    </header>
+    <div id="main" class="flex-con">
+
+    </div>
+
+    <div id="footer" class="border-t">
+        <ul class="flex-wrap" >
+            <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con active" >巡检</li>  <!-- style="color:#2ecc71"; -->
+            <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >采集</li>
+            <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >事件管理</li>
+            <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >协调记录 </li>
+        </ul>
+                    
+    </div>
+<!--底部按钮开始-->    
+    <div id= "xunjian" class="aui-content aui-content-padded">         
+      <ul id="list">
+        <li class = "box li lens"><button class="aui-btn aui-btn-success1" onclick="clickpipei();">应询点上报</button></li>
+        <li class = "box li lens"><button class="aui-btn aui-btn-success1" onclick="clickxunjianjilu();openWin('pointup')">&nbsp;&nbsp;&nbsp;&nbsp;查&nbsp;&nbsp;&nbsp;&nbsp;询 &nbsp;&nbsp;&nbsp;&nbsp;</button></li>
+      </ul>
+    </div>   
+    <div id= "caiji" class="aui-content aui-content-padded">         
+      <ul id="list">
+        <li class = "box li lens"><button class="aui-btn aui-btn-success1" onclick="openWin('collect');">应巡点采集</button></li>
+        <li class = "box li lens"><button class="aui-btn aui-btn-success1" onclick="openWin('collected');">编  辑 查 看</button></li>
+      </ul>
+    </div>  
+    <div id= "shijian" class="aui-content aui-content-padded">         
+      <ul id="list">
+        <li class = "box li lens"><button class="aui-btn aui-btn-success1" onclick="clickevent();">新  增  事  件</button></li>
+        <li class = "box li lens"><button class="aui-btn aui-btn-success1" onclick="clickeventquery();">事  件  查  询</button></li>
+      </ul>
+    </div>
+    <div id= "xietiao" class="aui-content aui-content-padded">  
+      <ul id="list">
+        <li class = "box li lens"><button class="aui-btn aui-btn-success1" onclick="clickcaiji();">新  增  记  录</button></li>
+        <li class = "box li lens"><button class="aui-btn aui-btn-success1" onclick="clickyingxundianchakan();">记  录  查  询</button></li>
+      </ul>
+    </div>
+<!--底部按钮结束-->    
+</div>
+
+</body>
+</html>
+<script type="text/javascript" src="./script/api.js"></script>
+<script src="./script/zepto.min.js"></script>
+<script type="text/javascript">
+
+var myScroll, menuOpened = false,setIntervalFun = null; 
+
+    apiready = function () {
+        api.parseTapmode();
+
+    }
+    
+    function openWin(name){
+        api.openWin({
+            name: ''+name+'',
+            url: './html/'+name+'_win.html',
+            bounces:false,
+            delay: 300
+        });
+    }
+
+    function closeWin() {
+        api.closeWin();
+    }
+    function openMenu() {
+    alert("打开 窗口！");
+//      if ($('.arrow_down').hasClass('arrow_up')) {
+//          $('.arrow_down').removeClass('arrow_up');
+//          $(".switchNav").addClass('hidden');
+//          $("#wrapper").removeClass('hidden');
+//          _closeNav()
+//      } else {
+            if (!menuOpened) {
+                api.openFrame({
+                    name: 'menu',
+                    url: 'html/frm_nav.html',
+                    bounces: false,
+                    rect: {
+
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: 'auto'
+//                      x: -($("body").width()),// -($("body").width() * .25),
+//                      y: 0,
+//                      w: $("body").width(),
+//                      h: $("body").height()
+                  }
+                });
+                menuOpened = true;
+            }
+//            _animation(api.winWidth * 0.75, addFilter);
+        }
+//  }
+
+    style="display: none;"
+    document.getElementById("caiji").style.display="none";//隐藏
+    document.getElementById("shijian").style.display="none";//隐藏
+    document.getElementById("xietiao").style.display="none";//隐藏    
+ 
+    function clickpipei(){
+	//每隔10秒钟执行一次setXSJYLTime()这个函数 
+        api.execScript({
+            frameName:'frame0',
+            script: 'getLocation();showUserLocation("follow",40000);chaxunyingxundian("","");'  //显示用户位置  none 标准模式(默认)  follow 跟踪模式  compass 罗盘模式
+        });
+	    setIntervalFun = setInterval("xunhuanrun()",1000*30);
+//	    $api.toast('巡线开始！');
+	    $api.toast('演示','巡线开始！',1000);
+//	    alert("巡线开始！",1000);
+
+	    
+    } 
+  
+    function xunhuanrun(){
+        api.execScript({
+            frameName:'frame0',
+	        script: 'getLocationAddDB();'
+        });
+    }
+    function clickxunjianjilu(){
+ /*               api.openFrame({
+                    name: 'menu',
+                    url: 'html/put.html',
+                    bounces: false,
+                    rect: {
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: 'auto'
+                  }
+                });  */
+	    if(setIntervalFun != null){ 
+            clearInterval(setIntervalFun); 
+	    }  
+	    alert("巡线结束！");   
+	        api.execScript({
+            frameName:'frame0',
+            script:'showUserLocation("none",4000);chaxun();'
+        });
+    }
+    function clickevent(){
+        alert("已点新增记录,以用户位置设置中心点");   
+        api.execScript({
+            frameName:'frame0',
+            script:'showUserLocation("follow",5000);dadian();'
+        });
+    }
+    function clickeventquery(){
+        alert("已点记录查询 ,以用户位置设置中心点");   
+        api.execScript({
+            frameName:'frame0',
+            script:'offlinemap();'
+        });
+    }
+
+    apiready = function () {
+        api.openWin({
+            name:"user_login",
+            url:'./html/user_login.html',
+            hScollBarEnabled : false,
+            bgColor:"#fff",
+        }) 
+        $api.fixStatusBar( $api.dom('header') );
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#6ab494'
+        });
+          funIniGroup();
+//        openWin('pointup');
+    }
+
+    function funIniGroup(){
+        var eHeaderLis = $api.domAll('header li'),
+            frames = [];
+        for (var i = 0,len = eHeaderLis.length; i < len; i++) {
+                frames.push( { 
+                    name: 'frame'+i, 
+                    url: './html/frame'+i+'.html', 
+                    bgColor : 'rgba(0,0,0,.2)',
+                    bounces:true
+                } )
+        }
+        api.openFrameGroup({
+            name: 'group',
+            scrollEnabled: false,
+            rect: {
+                x: 0, 
+                y: $api.dom('header').offsetHeight, 
+                w: api.winWidth, 
+                h: $api.dom('#main').offsetHeight
+            },
+            index: 0,
+            frames: frames
+            
+        }, function (ret, err) {
+
+        });
+        
+    }
+
+    // 随意切换按钮
+    function randomSwitchBtn( tag ) {
+        if( tag == $api.dom('#footer li.active') )return;
+       
+        var eFootLis = $api.domAll('#footer li'),
+            eHeaderLis = $api.domAll('header li'),
+            index = 0;
+        for (var i = 0,len = eFootLis.length; i < len; i++) {
+            if( tag == eFootLis[i] ){
+                index = i;
+            }else{
+                $api.removeCls(eFootLis[i], 'active');
+                $api.removeCls(eHeaderLis[i], 'active');
+            }
+                // 选择按钮 开始
+                if(index == 0){
+                  document.getElementById("xunjian").style.display="";//显  
+                  document.getElementById("caiji").style.display="none";//隐藏
+                  document.getElementById("shijian").style.display="none";//隐藏
+                  document.getElementById("xietiao").style.display="none";//隐藏                  
+                }
+                if(index == 1){
+                  document.getElementById("caiji").style.display="";//显  
+                  document.getElementById("xunjian").style.display="none";//隐藏
+                  document.getElementById("shijian").style.display="none";//隐藏
+                  document.getElementById("xietiao").style.display="none";//隐藏                      
+                }  
+                if(index == 2){
+                  document.getElementById("shijian").style.display="";//显
+                  document.getElementById("xunjian").style.display="none";//隐藏
+                  document.getElementById("caiji").style.display="none";//隐藏
+                  document.getElementById("xietiao").style.display="none";//隐藏   
+                }
+                if(index == 3){
+                  document.getElementById("xietiao").style.display="";//显
+                  document.getElementById("xunjian").style.display="none";//隐藏
+                  document.getElementById("caiji").style.display="none";//隐藏
+                  document.getElementById("shijian").style.display="none";//隐藏
+                }                
+             // 选择按钮 结束              
+        }
+        $api.addCls( eFootLis[index], 'active');
+        $api.addCls( eHeaderLis[index], 'active');
+        api.setFrameGroupIndex({
+            name: 'group',
+            index: index
+        });
+   
+    }
+    function test(){
+//      try {
+//          api.openSlidLayout({
+//              type: 'left',
+//              leftEdge: api.winWidth / 6.67,
+//              fixedPane: {
+//                  name: 'get',
+//                  url: 'html/win_homeFixed.html',
+//                  bounces:false
+//              },
+//              slidPane: {
+//                  name: 'win_homeSlider',
+//                  url: 'html/win_homeSlider.html'
+//              }
+//          }, function (ret) {
+//
+//          });
+//      } catch (e) {
+//          alert(e)
+//      }    
+                api.closeWin({
+                    name:'root'
+                });
+    
+    }
+    
+
+        function exitApp(){
+//              api.addEventListener({
+//                  name: 'keyback'
+//              }, function(ret, err){
+//                  api.toast({
+//                          msg: '再按一次返回键退出'+api.appName,
+//                          duration:2000,
+//                          location: 'bottom'
+//                      });
+//                      
+//                      api.addEventListener({
+//                          name: 'keyback'
+//                      }, function(ret, err){
+//                          api.closeWidget({
+//                                  id: 'A6994649445874',  //填写自己的id   
+//                                  retData: {name:'closeWidget'},
+//                                  silent:true
+//                              });
+//                      });
+//                      setTimeout(function(){
+//                              exitApp();
+//                      },3000)
+//              });
+              alert("已点退出");
+              closeWidget();
+        }    
+//测试参数
+    function test2(){
+        var appId = api.appId;
+        var appName = api.appName;
+        var appVersion = api.appVersion; 
+        var systemType = api.systemType; 
+        var systemVersion = api.systemVersion;
+        var version = api.version;
+        var deviceId = api.deviceId;
+        var deviceModel = api.deviceModel;
+        var deviceName = api.deviceName;
+        var operator = api.operator;  
+        var connectionType = api.connectionType; 
+        var fullScreen = api.fullScreen; 
+        var screenWidth = api.screenWidth;
+        var screenHeight = api.screenHeight; 
+        var winName = api.winName;
+        var winWidth = api.winWidth;
+        var winHeight = api.winHeight;
+        var frameName = api.frameName;
+        var frameWidth = api.frameWidth; 
+        var frameHeight = api.frameHeight;
+        
+        var pageParam = api.pageParam; //比如： {"name" : "tans-con"} 页间传递参数
+        var wgtParam = api.wgtParam;
+        var wgtRootDir = api.wgtRootDir;
+        var fsDir = api.fsDir;
+        var cacheDir = api.cacheDir; 
+        var appParam = api.appParam;
+               
+        alert("应用的 IDappId:"+appId + "\n"
+              +"应用在桌面显示名称appName:"+appName + "\n"
+              +"应用版本号appVersion:"+appVersion + "\n"
+              +"系统类型systemType:"+systemType + "\n"
+              +"手机平台的系统版本systemVersion:"+systemVersion + "\n"
+              +"引擎版本信息version:"+version + "\n"
+              +"设备唯一标识deviceId:"+deviceId + "\n"
+              +"设备型号deviceModel:"+deviceModel + "\n"
+              +"设备名称deviceName:"+deviceName + "\n"
+              +"运营商名称operator:"+operator + "\n"
+              +"当前网络连接类型connectionType:"+connectionType + "\n"
+              +"应用是否全屏fullScreen:"+fullScreen + "\n"
+              +"屏幕分辨率宽screenWidth:"+screenWidth + "\n"
+              +"屏幕分辨率高screenHeight:"+screenHeight + "\n"
+              +"当前 window 名称winName:"+winName + "\n"
+              +"当前 window 宽度winWidth:"+winWidth + "\n"
+              +"当前 window 高度winHeight:"+winHeight + "\n"
+              +"frame 名称frameName:"+frameName + "\n"
+              +"frame 宽度frameWidth:"+frameWidth + "\n"
+              +"frame 宽度frame 名称frameName:"+frameName + "\n"
+              +"frame 高度frameHeight:"+frameHeight + "\n"
+              +"页面参数pageParam:"+pageParam + "\n"
+              +"widget: //协议对应的真实目录，即 widget 网页包的根目录wgtRootDir:"+wgtRootDir + "\n"
+              +"widget 参数，JSON 对象类型wgtParam:"+wgtParam + "\n"
+              +"当应用被第三方应用打开时，传递过来的参数appParam:"+appParam + "\n"
+              +"fs: //协议对应地真实目录，字符串类型fsDir:"+fsDir + "\n"
+              +"cache://协议对应的真实目录cacheDir:"+cacheDir + "\n"
+        );
+      
+    }  
+        
+</script>

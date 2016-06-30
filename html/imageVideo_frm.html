@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui-flex.css" />
+    <style type="text/css">
+ 
+    </style>
+</head>
+<body>
+    <!--<div class="aui-content">-->
+    <div class="mui-content mui-card">
+        <p class="aui-padded-10">图片</p>
+        <ul class="aui-list-view aui-grid-view">
+            <li class="aui-list-view-cell aui-img aui-col-xs-3">
+                <img class="aui-img-object" src="../image/demo3.png">
+            </li>
+            <li class="aui-list-view-cell aui-img aui-col-xs-3">
+                <img class="aui-img-object" src="../image/demo2.png">
+            </li>
+            <li class="aui-list-view-cell aui-img aui-col-xs-3">
+                <img class="aui-img-object" src="../image/demo5.png">
+            </li>
+            <li class="aui-list-view-cell aui-img aui-col-xs-3">
+                <img class="aui-img-object" src="../image/demo6.png">
+            </li>
+            <li class="aui-list-view-cell aui-img aui-col-xs-3">
+                <img class="aui-img-object" src="../image/demo1.png">
+            </li>
+            <li class="aui-list-view-cell aui-img aui-col-xs-3">
+                <img id="img006" onclick="cls(this);" class="aui-img-object" src="../image/demo4.png">
+            </li>
+            <div id="a006">
+            <li class="aui-list-view-cell aui-img aui-col-xs-3">
+                <img onclick="getImage();" class="aui-img-object" src="../image/pluse.png">
+            </li>  </div>
+        </ul>
+      
+        
+    </div>
+    
+  <div style="float:left" id="2">
+  <img src="1.png"/><input type="text" id="items" value="请输入" name="2">
+  <span style="width:22px;border-width:0px;font-family:webdings;" onclick="cls(this)">r</span>
+ </div>    
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+		
+	};
+function deleteImage(r){
+//  var i=r.parentNode.parentNode.rowIndex;
+    document.getElementById(r).deleteImage;
+}	
+function getImage(){
+//  var i=r.parentNode.parentNode.rowIndex;
+    
+}	
+function cls(ob){ 
+  ob.parentNode.parentNode.removeChild(ob.parentNode);
+}
+
+</script>
+</html>
